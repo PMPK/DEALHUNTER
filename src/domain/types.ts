@@ -111,6 +111,8 @@ export interface Airport {
 export interface Dataset {
   datasetVersion: string;
   airport: Airport;
+  /** Very rough island silhouette [lat,lng] ring. Context only, NOT survey-accurate. */
+  islandOutline: LatLng[];
   areas: Area[];
   /** GeoJSON zone polygons; `properties.areaId` links to an Area. */
   zones: GeoJSON.FeatureCollection<GeoJSON.Polygon, { areaId: string }>;

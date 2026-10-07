@@ -18,6 +18,8 @@ _Last updated: 2026-10-07 · dataset `0.1.0-seed`_
 ## Known limitations
 - **All scores, warnings and attractions are unverified editorial priors** from general knowledge — no
   source was checked (egress to e.g. UNESCO was blocked in the build environment, so nothing is `verified`).
+- Island silhouette (`src/data/island.json`) is a hand-drawn rough outline so the map reads when tiles are blocked (e.g. inside the claude.ai Artifact, which blocks external images). Not survey-accurate.
+- Export: also shown as copyable JSON on the Calibrate page because sandboxed embeds block file downloads.
 - Zone polygons are schematic rounded rectangles, not real boundaries; attraction/hotel coordinates are approximate.
 - Distance to airport is straight-line, not road distance or time.
 - OSM public tile server is for light use only; map tiles need internet. Swap in `src/map/leaflet/tiles.ts`.

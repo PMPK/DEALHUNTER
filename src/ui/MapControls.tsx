@@ -39,6 +39,7 @@ export function Legend() {
         <li><span className="swatch" style={{ background: BANDS.unknown.color }} /> ? Unknown</li>
       </ul>
       <p className="small">Dashed outline and “?” = <strong>unverified</strong> seed data; “!” = disputed. Fill uses the first enabled score layer (Overall → Beach → Infra); chips show every enabled one.</p>
+      <p className="small">Beige island shape is a rough schematic silhouette for orientation, not a survey. Zones are schematic too.</p>
       <p className="small">Warnings outline: {(['info', 'caution', 'problem'] as const).map((s) => `${SEVERITY[s].symbol} ${SEVERITY[s].label}`).join(' · ')}</p>
     </details>
   );

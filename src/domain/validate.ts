@@ -24,6 +24,7 @@ function checkProvenance(label: string, p: Provenance, problems: string[]) {
 /** Returns a list of human-readable problems; empty means the dataset is consistent. */
 export function validateDataset(d: Dataset): string[] {
   const problems: string[] = [];
+  if (d.islandOutline.length < 4 || !d.islandOutline.every(inZanzibar)) problems.push('islandOutline: needs >=4 vertices, all inside Zanzibar');
   const areaIds = new Set<string>();
   for (const a of d.areas) {
     if (areaIds.has(a.id)) problems.push(`duplicate area id ${a.id}`);

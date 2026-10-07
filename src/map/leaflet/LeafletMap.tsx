@@ -14,6 +14,7 @@ const ll = (p: LatLng): L.LatLngTuple => [p[0], p[1]];
 export function LeafletMap(props: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const outlineLayer = useRef<L.LayerGroup | null>(null);
   const zoneLayer = useRef<L.LayerGroup | null>(null);
   const attractionLayer = useRef<L.LayerGroup | null>(null);
   const pinLayer = useRef<L.LayerGroup | null>(null);
@@ -28,6 +29,7 @@ export function LeafletMap(props: MapViewProps) {
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION, maxZoom: TILE_MAX_ZOOM }).addTo(map);
     map.fitBounds(ZANZIBAR_BOUNDS);
+    outlineLayer.current = L.layerGroup().addTo(map);
     zoneLayer.current = L.layerGroup().addTo(map);
     attractionLayer.current = L.layerGroup().addTo(map);
     pinLayer.current = L.layerGroup().addTo(map);
@@ -44,6 +46,20 @@ export function LeafletMap(props: MapViewProps) {
       mapRef.current = null;
     };
   }, []);
+
+  // Island silhouette: visible when base tiles are missing or blocked; hidden under opaque tiles otherwise.
+  useEffect(() => {
+    const layer = outlineLayer.current;
+    if (!layer) return;
+    layer.clearLayers();
+    L.polygon(props.outline.map(ll), {
+      color: '#b9ad8d',
+      weight: 1.5,
+      fillColor: '#efe8d3',
+      fillOpacity: 1,
+      interactive: false,
+    }).addTo(layer);
+  }, [props.outline]);
 
   // Zones + their label chips. Data is tiny, so redraw wholesale.
   useEffect(() => {

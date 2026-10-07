@@ -46,6 +46,8 @@ export interface MapPin {
 }
 
 export interface MapViewProps {
+  /** Schematic island silhouette drawn under the zones so the map reads even without base tiles. */
+  outline: LatLng[];
   zones: MapZone[];
   attractions: MapAttraction[];
   pin: MapPin | null;

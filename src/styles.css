@@ -12,6 +12,7 @@
   --poor: #d64045;
   --demo: #7a3fb0;
   --radius: 12px;
+  color-scheme: light;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--ink);
 }
@@ -26,7 +27,8 @@ a { color: #0b5c73; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 ul.plain { list-style: none; padding: 0; margin: .3rem 0; }
 ul.plain li { margin: .2rem 0; }
-button { font: inherit; }
+button { font: inherit; color: inherit; }
+button:disabled { color: var(--muted); }
 :focus-visible { outline: 3px solid #1b7fa3; outline-offset: 2px; }
 
 .app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
@@ -43,7 +45,7 @@ button { font: inherit; }
 
 .stage { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .map-wrap { position: relative; flex: 1; min-height: 45%; }
-.zr-map { position: absolute; inset: 0; z-index: 0; }
+.zr-map { position: absolute; inset: 0; z-index: 0; background: #cfe3ea; }
 .side { overflow-y: auto; background: var(--bg); padding: .6rem; }
 .stage:not(.has-panel) .side { display: none; }
 .stage.has-panel .map-wrap { flex: 0 0 38%; min-height: 220px; }
@@ -116,11 +118,11 @@ button { font: inherit; }
 .rating-not-sure[aria-pressed='true'] { background: #6d7b82; border-color: #6d7b82; }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 .link-btn { border: 0; background: none; color: #0b5c73; text-decoration: underline; cursor: pointer; padding: .2rem 0; text-align: left; min-height: 32px; }
-.list-btn { width: 100%; display: flex; justify-content: space-between; gap: .6rem; padding: .6rem .7rem; border: 1px solid var(--line); background: #fcfbf8; border-radius: 10px; cursor: pointer; min-height: 44px; }
+.list-btn { color: var(--ink); width: 100%; display: flex; justify-content: space-between; gap: .6rem; padding: .6rem .7rem; border: 1px solid var(--line); background: #fcfbf8; border-radius: 10px; cursor: pointer; min-height: 44px; }
 .list-btn span:first-child { font-weight: 600; margin-right: auto; }
 .explorer-target { margin: 0; }
 .note-label { display: block; margin-top: .5rem; }
-textarea, select { width: 100%; font: inherit; padding: .5rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+textarea, select { color: var(--ink); width: 100%; font: inherit; padding: .5rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 
 .demo-banner { background: #efe3fa; border: 1.5px dashed var(--demo); color: #4a2370; padding: .4rem .6rem; border-radius: 8px; font-size: .82rem; margin-bottom: .5rem; }
 .hotel { border: 1px solid var(--line); border-radius: 10px; padding: .6rem; margin: .5rem 0; background: #fcfbf8; }

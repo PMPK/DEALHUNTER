@@ -4,6 +4,7 @@ import areas from './areas.json';
 import attractions from './attractions.json';
 import hotels from './hotels.json';
 import offers from './offers.json';
+import island from './island.json';
 import meta from './meta.json';
 import zones from './zones.geojson.json';
 
@@ -14,6 +15,7 @@ import zones from './zones.geojson.json';
 export const dataset: Dataset = {
   datasetVersion: meta.datasetVersion,
   airport: { ...meta.airport, coordinates: meta.airport.coordinates as [number, number] },
+  islandOutline: island as unknown as Dataset['islandOutline'],
   areas: areas as unknown as Area[],
   zones: zones as unknown as Dataset['zones'],
   attractions: attractions as unknown as Attraction[],

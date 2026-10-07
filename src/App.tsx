@@ -141,6 +141,7 @@ export function App() {
           <section className="map-wrap" aria-label="Map">
             <OverlayControls active={overlays} onToggle={toggleOverlay} />
             <ZanzibarMap
+              outline={dataset.islandOutline}
               zones={zones}
               attractions={markers}
               pin={pin}
