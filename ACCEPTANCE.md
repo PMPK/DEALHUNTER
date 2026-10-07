@@ -14,6 +14,7 @@ Status: ✅ done and covered by automated tests · 🧪 also/only verified manua
 | 7 | Attraction markers with name, coords, category, rating, description, source, verification | ✅ | `dataset.test.ts`, attraction card test |
 | 8 | Hotels linked to areas, clearly synthetic | ✅ | `dataset.test.ts`, `App.test.tsx` |
 | 9 | DEMO holiday offers (price, people, city, dates, duration, hotel, board, Deal Score placeholder) labelled DEMO / NOT LIVE DATA | ✅ | `App.test.tsx` |
+| 9b | Offers search: filters, sorting, reality filters, DEMO labelling, jump to area | ✅ | `offers.test.ts`, `App.test.tsx` "offers search" |
 | 10 | Tester mode: 4 ratings + note per area, localStorage, "Export feedback JSON" | ✅🧪 | `feedback.test.ts`, `App.test.tsx`, real browser download check |
 | 11 | Compare two areas side-by-side | ✅ | `App.test.tsx` |
 | 12 | Mobile-first responsive UI | 🧪 | screenshots at 390 px and 1280 px |

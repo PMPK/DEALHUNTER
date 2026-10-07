@@ -83,6 +83,8 @@ export function validateDataset(d: Dataset): string[] {
   for (const o of d.offers) {
     if (!hotelIds.has(o.hotelId)) problems.push(`offer ${o.id}: unknown hotel ${o.hotelId}`);
     if (o.demo !== true) problems.push(`offer ${o.id}: must be flagged demo`);
+    const days = Math.round((Date.parse(o.returnDate) - Date.parse(o.departDate)) / 86_400_000);
+    if (days !== o.nights) problems.push(`offer ${o.id}: nights (${o.nights}) does not match dates (${days})`);
   }
   return problems;
 }

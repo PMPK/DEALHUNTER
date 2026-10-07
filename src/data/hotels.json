@@ -58,5 +58,89 @@
     ],
     "style": "Town guesthouse",
     "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-matemwe-1",
+    "areaId": "matemwe",
+    "name": "DEMO Reef Villas (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -5.87,
+      39.388
+    ],
+    "style": "Villa resort",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-michamvi-1",
+    "areaId": "michamvi",
+    "name": "DEMO Peninsula Lodge (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.146,
+      39.547
+    ],
+    "style": "Small lodge",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-bwejuu-1",
+    "areaId": "bwejuu",
+    "name": "DEMO Village Beach House (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.241,
+      39.534
+    ],
+    "style": "Guesthouse",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-jambiani-1",
+    "areaId": "jambiani",
+    "name": "DEMO Seaweed Coast Inn (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.311,
+      39.545
+    ],
+    "style": "Guesthouse",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-kizimkazi-1",
+    "areaId": "kizimkazi",
+    "name": "DEMO Southern Bay Camp (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.441,
+      39.473
+    ],
+    "style": "Eco camp",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-kendwa-2",
+    "areaId": "kendwa",
+    "name": "DEMO Lagoon Club (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -5.755,
+      39.292
+    ],
+    "style": "Beach club hotel",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-nungwi-2",
+    "areaId": "nungwi",
+    "name": "DEMO Tip Beach Hotel (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -5.723,
+      39.296
+    ],
+    "style": "Mid-range hotel",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
   }
 ]

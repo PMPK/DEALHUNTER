@@ -12,6 +12,7 @@ _Last updated: 2026-10-07 · dataset `0.1.0-seed`_
   attraction, synthetic hotel or dropped pin.
 - Tester mode: Accurate / Mostly accurate / Wrong / Not sure + note per area, localStorage, export JSON.
   "Wrong" displays the area as *disputed* locally.
+- **Offers tab**: search over 28 DEMO offers (12 synthetic hotels) with filters for departure city, area, people, max price/person, board, departure window, nights, plus *reality filters* (min area / beach score); 6 sort orders; each result shows the area's seed scores (marked unverified) and warning count and jumps to the area on the map.
 - Compare view (two areas); responsive layout (stacked sheet on phones, side panel ≥900 px).
 - `npm run validate` = typecheck + tests + production build, all passing.
 
@@ -34,7 +35,7 @@ _Last updated: 2026-10-07 · dataset `0.1.0-seed`_
 - Verification pass: replace "Editorial prior" evidence with real sources, then promote items to `verified`.
 - Per-score tester corrections (e.g. "beach should be 40"); feedback import/merge tool.
 - Real polygons (OSM-derived), more areas (Dongwe, Uroa, Fumba, Makunduchi), hotels from a real source.
-- Deal Score algorithm; live offers; Pemba.
+- Deal Score algorithm; **live offers (needs a travel-data API / affiliate feed — nothing is connected; the Offers tab runs on invented data)**; Pemba.
 - Accessibility audit (map labels are keyboard-focusable via Leaflet; not screen-reader tested).
 
 ## Architectural decisions

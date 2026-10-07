@@ -168,3 +168,19 @@ textarea, select { color: var(--ink); width: 100%; font: inherit; padding: .5rem
   .proto-banner { font-size: .72rem; padding: .2rem .7rem; }
   .stage.has-panel .map-wrap { flex-basis: 40%; }
 }
+
+.filters { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .7rem; margin: .7rem 0; }
+.filters label { display: flex; flex-direction: column; gap: .2rem; font-size: .8rem; color: var(--muted); font-weight: 600; }
+.filters input, .filters select { color: var(--ink); width: 100%; font: inherit; padding: .45rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; min-height: 40px; }
+.filter-actions { display: flex; align-items: flex-end; }
+.results-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; margin: .4rem 0; }
+.results-bar .inline { display: flex; align-items: center; gap: .5rem; font-size: .85rem; }
+.results-bar select { color: var(--ink); padding: .35rem; border: 1px solid var(--line); border-radius: 8px; background: #fff; width: auto; }
+.offer-results { display: grid; gap: .6rem; }
+.offer-card { margin: 0; border-style: dashed; border-color: var(--demo); }
+.offer-top { display: flex; flex-wrap: wrap; gap: .3rem; }
+.offer-price { font-size: 1.05rem; margin: .3rem 0; }
+.reality-row { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; }
+.reality-chip { font-size: .78rem; border: 1.5px solid var(--line); border-radius: 999px; padding: 1px 8px; background: #fcfbf8; }
+.offer-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
+@media (min-width: 760px) { .offer-results { grid-template-columns: 1fr 1fr; } }

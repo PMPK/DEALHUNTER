@@ -8,11 +8,12 @@ import { AreaPanel } from './ui/AreaPanel';
 import { AttractionCard } from './ui/AttractionCard';
 import { CalibrateView } from './ui/CalibrateView';
 import { CompareView } from './ui/CompareView';
+import { OffersView } from './ui/OffersView';
 import { Legend, OverlayControls } from './ui/MapControls';
 import type { ExplorerTarget } from './ui/RealityExplorer';
 import { DEFAULT_OVERLAYS, buildAttractionMarkers, buildZones, type OverlayId } from './ui/overlays';
 
-type View = 'map' | 'compare' | 'calibrate';
+type View = 'map' | 'offers' | 'compare' | 'calibrate';
 const TESTER_KEY = 'zanzibar-reality:tester-mode';
 
 function readTester(): boolean {
@@ -121,7 +122,7 @@ export function App() {
           </div>
         </div>
         <nav className="tabs" aria-label="Views">
-          {([['map', 'Map'], ['compare', 'Compare'], ['calibrate', 'Calibrate']] as const).map(([id, label]) => (
+          {([['map', 'Map'], ['offers', 'Offers'], ['compare', 'Compare'], ['calibrate', 'Calibrate']] as const).map(([id, label]) => (
             <button key={id} type="button" className={`tab${view === id ? ' active' : ''}`} aria-current={view === id ? 'page' : undefined} onClick={() => setView(id)}>
               {label}
             </button>
@@ -199,6 +200,18 @@ export function App() {
               </section>
             ) : null}
           </aside>
+        </main>
+      ) : null}
+
+      {view === 'offers' ? (
+        <main className="page">
+          <OffersView
+            dataset={dataset}
+            onShowArea={(id) => {
+              selectArea(id);
+              setView('map');
+            }}
+          />
         </main>
       ) : null}
 

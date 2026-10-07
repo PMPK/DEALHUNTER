@@ -118,8 +118,8 @@ describe('area detail panel', () => {
     await u.click(zoneBtn('nungwi'));
     await u.click(screen.getByText('Hotels & demo offers'));
     expect(screen.getAllByText('DEMO / NOT LIVE DATA').length).toBeGreaterThan(0);
-    expect(screen.getByText('SYNTHETIC')).toBeInTheDocument();
-    const offer = screen.getByTestId('demo-offer');
+    expect(screen.getAllByText('SYNTHETIC').length).toBeGreaterThan(0);
+    const offer = screen.getAllByTestId('demo-offer')[0]!;
     expect(within(offer).getByText('DEMO / NOT LIVE DATA')).toBeInTheDocument();
     for (const label of ['People', 'From', 'Dates', 'Duration', 'Board']) expect(within(offer).getByText(label)).toBeInTheDocument();
     expect(within(offer).getByText(/Deal Score: placeholder/)).toBeInTheDocument();
@@ -219,5 +219,62 @@ describe('compare view', () => {
     await u.click(zoneBtn('kendwa'));
     await u.click(screen.getByRole('button', { name: /Compare with another area/ }));
     expect(within(screen.getByTestId('compare-view')).getByLabelText('Area A')).toHaveValue('kendwa');
+  });
+});
+
+describe('offers search', () => {
+  const count = () => screen.getAllByTestId('offer-result').length;
+
+  it('lists demo offers, all labelled DEMO / NOT LIVE DATA with a reality check', async () => {
+    const u = user();
+    render(<App />);
+    await u.click(screen.getByRole('button', { name: 'Offers' }));
+    const view = screen.getByTestId('offers-view');
+    expect(within(view).getAllByText('DEMO / NOT LIVE DATA').length).toBeGreaterThan(count());
+    const first = screen.getAllByTestId('offer-result')[0]!;
+    expect(within(first).getByText('SYNTHETIC HOTEL')).toBeInTheDocument();
+    expect(within(first).getByText(/Deal Score: placeholder/)).toBeInTheDocument();
+    expect(within(first).getByLabelText(/Reality check for/)).toBeInTheDocument();
+  });
+
+  it('filters and sorts results, and can be reset', async () => {
+    const u = user();
+    render(<App />);
+    await u.click(screen.getByRole('button', { name: 'Offers' }));
+    const total = count();
+    await u.selectOptions(screen.getByLabelText('Area'), 'nungwi');
+    const nungwi = count();
+    expect(nungwi).toBeGreaterThan(0);
+    expect(nungwi).toBeLessThan(total);
+    for (const card of screen.getAllByTestId('offer-result')) expect(card).toHaveTextContent('Nungwi');
+    expect(screen.getByRole('status')).toHaveTextContent(`${nungwi} of ${total}`);
+
+    await u.type(screen.getByLabelText(/Max price per person/), '1');
+    expect(screen.getByText(/No demo offers match/)).toBeInTheDocument();
+    await u.click(screen.getByRole('button', { name: 'Reset filters' }));
+    expect(count()).toBe(total);
+
+    await u.selectOptions(screen.getByLabelText('Sort by'), 'price-desc');
+    const prices = screen.getAllByTestId('offer-result').map((c) => Number(/(\d+) EUR per person/.exec(c.textContent ?? '')![1]));
+    expect(prices).toEqual([...prices].sort((a, b) => b - a));
+  });
+
+  it('reality filter hides weak-beach areas', async () => {
+    const u = user();
+    render(<App />);
+    await u.click(screen.getByRole('button', { name: 'Offers' }));
+    await u.selectOptions(screen.getByLabelText('Min beach / swimming score'), '70');
+    for (const card of screen.getAllByTestId('offer-result')) {
+      expect(card).not.toHaveTextContent('Stone Town');
+    }
+  });
+
+  it('jumps to the area reality check on the map', async () => {
+    const u = user();
+    render(<App />);
+    await u.click(screen.getByRole('button', { name: 'Offers' }));
+    await u.selectOptions(screen.getByLabelText('Area'), 'paje');
+    await u.click(screen.getAllByRole('button', { name: /See Paje reality check/ })[0]!);
+    expect(screen.getByRole('region', { name: /Area details: Paje/ })).toBeInTheDocument();
   });
 });

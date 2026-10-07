@@ -17,7 +17,7 @@ validate that before spending on live offers, AI, paid APIs, accounts or affilia
 ## Scope (MVP)
 Zanzibar (Unguja) only · 10 tourist areas · 5 independent overlays · area detail panel · Reality Explorer
 (Google Maps / Street View / Earth links) · attraction markers · synthetic demo hotels & DEMO offers ·
-tester calibration + JSON export · two-area comparison · mobile-first UI.
+offer search over demo data (with reality filters) · tester calibration + JSON export · two-area comparison · mobile-first UI.
 
 ## Out of scope (deliberately)
 Live prices, booking, accounts, database, AI summaries, review scraping, Pemba/mainland, real hotel facts.
