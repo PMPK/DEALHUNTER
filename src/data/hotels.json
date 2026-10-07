@@ -1,0 +1,62 @@
+[
+  {
+    "id": "demo-nungwi-1",
+    "areaId": "nungwi",
+    "name": "DEMO Palm Resort (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -5.725,
+      39.293
+    ],
+    "style": "Beachfront resort",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-kendwa-1",
+    "areaId": "kendwa",
+    "name": "DEMO Sunset Bungalows (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -5.754,
+      39.29
+    ],
+    "style": "Beach bungalows",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-kiwengwa-1",
+    "areaId": "kiwengwa",
+    "name": "DEMO Coral All-Inclusive (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.021,
+      39.39
+    ],
+    "style": "Large all-inclusive",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-paje-1",
+    "areaId": "paje",
+    "name": "DEMO Kite Lodge (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.271,
+      39.535
+    ],
+    "style": "Small lodge",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  },
+  {
+    "id": "demo-stone-town-1",
+    "areaId": "stone-town",
+    "name": "DEMO Old Town Guesthouse (synthetic)",
+    "synthetic": true,
+    "coordinates": [
+      -6.1625,
+      39.1915
+    ],
+    "style": "Town guesthouse",
+    "note": "SYNTHETIC DEMO HOTEL. Not a real property; name, style and position are invented to demonstrate the UI."
+  }
+]

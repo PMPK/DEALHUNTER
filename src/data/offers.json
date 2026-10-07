@@ -1,0 +1,70 @@
+[
+  {
+    "id": "demo-offer-1",
+    "hotelId": "demo-nungwi-1",
+    "demo": true,
+    "price": {
+      "amount": 1290,
+      "currency": "EUR",
+      "per": "person"
+    },
+    "people": 2,
+    "departureCity": "Warsaw",
+    "departDate": "2027-02-06",
+    "returnDate": "2027-02-16",
+    "nights": 10,
+    "board": "Half board",
+    "dealScore": null
+  },
+  {
+    "id": "demo-offer-2",
+    "hotelId": "demo-kiwengwa-1",
+    "demo": true,
+    "price": {
+      "amount": 1540,
+      "currency": "EUR",
+      "per": "person"
+    },
+    "people": 2,
+    "departureCity": "London",
+    "departDate": "2027-03-13",
+    "returnDate": "2027-03-23",
+    "nights": 10,
+    "board": "All inclusive",
+    "dealScore": null
+  },
+  {
+    "id": "demo-offer-3",
+    "hotelId": "demo-paje-1",
+    "demo": true,
+    "price": {
+      "amount": 990,
+      "currency": "EUR",
+      "per": "person"
+    },
+    "people": 1,
+    "departureCity": "Frankfurt",
+    "departDate": "2027-02-20",
+    "returnDate": "2027-03-02",
+    "nights": 10,
+    "board": "Bed & breakfast",
+    "dealScore": null
+  },
+  {
+    "id": "demo-offer-4",
+    "hotelId": "demo-kendwa-1",
+    "demo": true,
+    "price": {
+      "amount": 1180,
+      "currency": "EUR",
+      "per": "person"
+    },
+    "people": 4,
+    "departureCity": "Warsaw",
+    "departDate": "2027-04-03",
+    "returnDate": "2027-04-10",
+    "nights": 7,
+    "board": "Half board",
+    "dealScore": null
+  }
+]

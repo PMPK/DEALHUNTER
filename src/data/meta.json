@@ -1,0 +1,11 @@
+{
+  "datasetVersion": "0.1.0-seed",
+  "airport": {
+    "name": "Abeid Amani Karume International Airport",
+    "iata": "ZNZ",
+    "coordinates": [
+      -6.222,
+      39.2249
+    ]
+  }
+}
