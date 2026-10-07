@@ -170,6 +170,8 @@ describe('tester / calibration mode', () => {
     const json = JSON.parse(await blobs[0]!.text());
     expect(json.entries).toHaveLength(1);
     expect(json.entries[0]).toMatchObject({ areaId: 'paje', rating: 'wrong', note: 'Only swimmable at high tide' });
+    // same JSON is also shown on screen for environments that block downloads
+    expect(JSON.parse((screen.getByLabelText('Feedback JSON') as HTMLTextAreaElement).value).entries).toHaveLength(1);
   });
 
   it('restores saved feedback after reload', async () => {

@@ -33,6 +33,7 @@ export function App() {
   const [feedback, setFeedback] = useState<FeedbackMap>(() => loadFeedback());
   const [storageOk, setStorageOk] = useState(true);
   const [testerMode, setTesterMode] = useState(readTester);
+  const [exportJson, setExportJson] = useState<string | null>(null);
   const [compareSeed, setCompareSeed] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -79,6 +80,7 @@ export function App() {
   const exportFeedback = () => {
     const now = new Date();
     const json = JSON.stringify(buildFeedbackExport(feedback, dataset, now), null, 2);
+    setExportJson(json);
     const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
@@ -213,6 +215,7 @@ export function App() {
             onChange={changeFeedback}
             onExport={exportFeedback}
             onClear={clearFeedback}
+            exportJson={exportJson}
             storageOk={storageOk}
           />
         </main>
