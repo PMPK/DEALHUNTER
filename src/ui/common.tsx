@@ -1,21 +1,19 @@
 import type { ReactNode } from 'react';
-import { BANDS, STATUS_LABEL, confidenceLabel, effectiveStatus, formatScore, scoreBand } from '../domain/scoring';
-import type { FeedbackEntry, Provenance, ScoredItem, VerificationStatus } from '../domain/types';
+import { BANDS, SOURCE_LABEL, STATUS_LABEL, confidenceLabel, formatScore, scoreBand } from '../domain/scoring';
+import type { Assessment, Provenance, SourceType, VerificationStatus } from '../domain/types';
 
 const STATUS_ICON: Record<VerificationStatus, string> = { verified: '✔', unverified: '?', disputed: '!' };
 
-export function StatusBadge({ status, byTester }: { status: VerificationStatus; byTester?: boolean }) {
+export function StatusBadge({ status }: { status: VerificationStatus }) {
   return (
-    <span className={`badge status-${status}`} title={byTester ? 'Downgraded by your own calibration feedback' : undefined}>
+    <span className={`badge status-${status}`}>
       <span aria-hidden="true">{STATUS_ICON[status]}</span> {STATUS_LABEL[status]}
-      {byTester ? ' (by tester)' : ''}
     </span>
   );
 }
 
-export function ItemStatus({ item, feedback }: { item: Pick<Provenance, 'verificationStatus'>; feedback?: FeedbackEntry }) {
-  const eff = effectiveStatus(item, feedback);
-  return <StatusBadge status={eff.status} byTester={eff.source === 'tester'} />;
+export function SourceBadge({ sourceType }: { sourceType: SourceType }) {
+  return <span className={`badge source-${sourceType}`}>Source: {SOURCE_LABEL[sourceType]}</span>;
 }
 
 export function ConfidenceBadge({ confidence }: { confidence: number }) {
@@ -26,25 +24,59 @@ export function ConfidenceBadge({ confidence }: { confidence: number }) {
   );
 }
 
-export function ScoreMeter({ item, label, feedback }: { item: ScoredItem; label: string; feedback?: FeedbackEntry }) {
-  const band = scoreBand(item.score);
+/** Badges + reasons + evidence for anything carrying provenance. */
+export function ProvenanceDetails({ p }: { p: Provenance }) {
+  return (
+    <div className="prov">
+      <div className="badge-row">
+        <StatusBadge status={p.verificationStatus} />
+        <SourceBadge sourceType={p.sourceType} />
+        <ConfidenceBadge confidence={p.confidence} />
+        <span className="badge">Updated {p.lastUpdated}</span>
+      </div>
+      {p.reasons.length > 0 ? (
+        <ul className="small">
+          {p.reasons.map((r) => <li key={r}>{r}</li>)}
+        </ul>
+      ) : null}
+      {p.evidence.length > 0 ? (
+        <ul className="small evidence">
+          {p.evidence.map((e) => (
+            <li key={e.label + (e.url ?? '') + (e.note ?? '')}>
+              {e.url ? <a href={e.url} target="_blank" rel="noopener noreferrer">{e.label}</a> : e.label}
+              {e.note ? <span className="muted"> — {e.note}</span> : null}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="small muted">No evidence entries.</p>
+      )}
+    </div>
+  );
+}
+
+/** Score card for one assessment; `null` renders as an explicit "no evidence" state, never a number. */
+export function ScoreMeter({ a, label }: { a: Assessment | null; label: string }) {
+  const score = a?.score ?? null;
+  const band = scoreBand(score);
   const meta = BANDS[band];
-  const width = item.score === null ? 0 : Math.max(2, Math.min(100, item.score));
   return (
     <div className="score-card" data-band={band}>
       <div className="score-label">{label}</div>
-      <div className="score-value" style={{ color: meta.color }} aria-label={`${label}: ${formatScore(item.score)} out of 100, ${meta.label}`}>
-        <span>{formatScore(item.score)}</span>
-        <small>/100</small>
-      </div>
+      {score === null ? (
+        <div className="score-value unknown">No score</div>
+      ) : (
+        <div className="score-value" style={{ color: meta.color }} aria-label={`${label}: ${formatScore(score)} out of 100, ${meta.label}`}>
+          <span>{formatScore(score)}</span>
+          <small>/100</small>
+        </div>
+      )}
       <div className="meter" aria-hidden="true">
-        <div className="meter-fill" style={{ width: `${width}%`, background: meta.color }} />
+        <div className="meter-fill" style={{ width: `${score ?? 0}%`, background: meta.color }} />
       </div>
       <div className="score-band">
-        <span aria-hidden="true">{meta.symbol}</span> {meta.label}
+        <span aria-hidden="true">{meta.symbol}</span> {score === null ? (a ? 'Unknown' : 'No evidence yet') : meta.label}
       </div>
-      <ConfidenceBadge confidence={item.confidence} />
-      <ItemStatus item={item} feedback={feedback} />
     </div>
   );
 }
@@ -63,15 +95,5 @@ export function Section({ title, children, open = true }: { title: string; child
       <summary>{title}</summary>
       <div className="section-body">{children}</div>
     </details>
-  );
-}
-
-export function TagList({ items }: { items: string[] }) {
-  return (
-    <ul className="tags">
-      {items.map((t) => (
-        <li key={t}>{t}</li>
-      ))}
-    </ul>
   );
 }

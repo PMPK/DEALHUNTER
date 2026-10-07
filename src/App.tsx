@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { dataset } from './data';
-import { RATING_LABEL, buildFeedbackExport, exportFileName, loadFeedback, saveFeedback, withFeedback } from './domain/feedback';
-import { scoreBand, BANDS, formatScore } from './domain/scoring';
-import type { FeedbackMap, FeedbackRating, LatLng } from './domain/types';
+import { shipped } from './data/shipped';
+import { buildFeedbackExport, exportFileName, loadFeedback, saveFeedback, withFeedback } from './domain/feedback';
+import type { Dataset, FeatureKind, FeedbackDimension, FeedbackKind, FeedbackMap, FeedbackRating, LatLng, RadiusM, Selection } from './domain/types';
+import { OffersView } from './frozen/offers/OffersView';
 import { ZanzibarMap } from './map';
-import { AreaPanel } from './ui/AreaPanel';
-import { AttractionCard } from './ui/AttractionCard';
 import { CalibrateView } from './ui/CalibrateView';
 import { CompareView } from './ui/CompareView';
-import { OffersView } from './ui/OffersView';
-import { Legend, OverlayControls } from './ui/MapControls';
-import type { ExplorerTarget } from './ui/RealityExplorer';
-import { DEFAULT_OVERLAYS, buildAttractionMarkers, buildZones, type OverlayId } from './ui/overlays';
+import { DatasetStatus } from './ui/DatasetStatus';
+import { LocalRealityPanel } from './ui/LocalRealityPanel';
+import { Legend, LayerControls } from './ui/MapControls';
+import { DEFAULT_LAYERS, buildMarkers, buildShapes, pinSelection, selectionFor, type LayerId } from './ui/layers';
 
-type View = 'map' | 'offers' | 'compare' | 'calibrate';
+type View = 'map' | 'compare' | 'calibrate' | 'offers';
 const TESTER_KEY = 'zanzibar-reality:tester-mode';
 
 function readTester(): boolean {
@@ -24,12 +22,16 @@ function readTester(): boolean {
   }
 }
 
-export function App() {
+interface AppProps {
+  dataset?: Dataset;
+  problems?: string[];
+}
+
+export function App({ dataset = shipped.dataset, problems = shipped.problems }: AppProps) {
   const [view, setView] = useState<View>('map');
-  const [overlays, setOverlays] = useState<ReadonlySet<OverlayId>>(DEFAULT_OVERLAYS);
-  const [areaId, setAreaId] = useState<string | null>(null);
-  const [attractionId, setAttractionId] = useState<string | null>(null);
-  const [explorer, setExplorer] = useState<ExplorerTarget | null>(null);
+  const [layers, setLayers] = useState<ReadonlySet<LayerId>>(DEFAULT_LAYERS);
+  const [selection, setSelection] = useState<Selection | null>(null);
+  const [radius, setRadius] = useState<RadiusM>(500);
   const [focus, setFocus] = useState<LatLng | null>(null);
   const [feedback, setFeedback] = useState<FeedbackMap>(() => loadFeedback());
   const [storageOk, setStorageOk] = useState(true);
@@ -41,8 +43,8 @@ export function App() {
     setStorageOk(saveFeedback(feedback));
   }, [feedback]);
 
-  const toggleOverlay = useCallback((id: OverlayId) => {
-    setOverlays((prev) => {
+  const toggleLayer = useCallback((id: LayerId) => {
+    setLayers((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -50,33 +52,25 @@ export function App() {
     });
   }, []);
 
-  const area = dataset.areas.find((a) => a.id === areaId) ?? null;
-  const attraction = dataset.attractions.find((a) => a.id === attractionId) ?? null;
+  const select = useCallback(
+    (kind: FeatureKind, id: string) => {
+      const s = selectionFor(dataset, kind, id);
+      if (!s) return;
+      setSelection(s);
+      setFocus([s.position[0], s.position[1]]);
+    },
+    [dataset],
+  );
 
-  const selectArea = useCallback((id: string) => {
-    const a = dataset.areas.find((x) => x.id === id);
-    setAreaId(id);
-    setAttractionId(null);
-    setExplorer(null);
-    if (a) setFocus([a.center[0], a.center[1]]);
-  }, []);
+  const pickPoint = useCallback((p: LatLng) => setSelection(pinSelection(p)), []);
 
-  const selectAttraction = useCallback((id: string) => {
-    const t = dataset.attractions.find((x) => x.id === id);
-    setAttractionId(id);
-    if (t) setFocus([t.coordinates[0], t.coordinates[1]]);
-  }, []);
+  const shapes = useMemo(() => buildShapes(dataset, layers, selection, feedback), [dataset, layers, selection, feedback]);
+  const markers = useMemo(() => buildMarkers(dataset, layers, selection), [dataset, layers, selection]);
+  const pin = selection?.ref.kind === 'point' ? { position: selection.position, label: selection.label } : null;
+  const circle = selection && ['hotel', 'point', 'attraction'].includes(selection.ref.kind) ? { center: selection.position, radiusM: radius } : null;
 
-  const pickPoint = useCallback((p: LatLng) => {
-    setExplorer({ label: 'Dropped pin', position: p, caveat: 'Your own map pin.' });
-  }, []);
-
-  const zones = useMemo(() => buildZones(dataset, overlays, areaId, feedback), [overlays, areaId, feedback]);
-  const markers = useMemo(() => buildAttractionMarkers(dataset.attractions, overlays, attractionId), [overlays, attractionId]);
-  const pin = explorer?.label === 'Dropped pin' ? { position: explorer.position, label: 'Dropped pin' } : null;
-
-  const changeFeedback = (id: string, patch: { rating?: FeedbackRating | null; note?: string }) =>
-    setFeedback((prev) => withFeedback(prev, id, patch));
+  const changeFeedback = (kind: FeedbackKind, id: string, dim: FeedbackDimension, patch: { rating?: FeedbackRating | null; note?: string }) =>
+    setFeedback((prev) => withFeedback(prev, { kind, id }, dim, patch));
 
   const exportFeedback = () => {
     const now = new Date();
@@ -106,10 +100,8 @@ export function App() {
       return !v;
     });
 
-  const hasPanel = view === 'map' && (area || attraction);
-  const explorerTarget: ExplorerTarget | null = area
-    ? explorer ?? { label: `${area.name} (zone centre)`, position: area.center, caveat: 'Zone centre is approximate.' }
-    : null;
+  const hasPanel = view === 'map' && selection !== null;
+  const tabs: Array<[View, string]> = [['map', 'Map'], ['compare', 'Compare'], ['calibrate', 'Calibrate'], ['offers', 'Offers']];
 
   return (
     <div className="app">
@@ -118,11 +110,11 @@ export function App() {
           <span className="logo" aria-hidden="true">〰</span>
           <div>
             <h1>Zanzibar Reality</h1>
-            <p>Beyond the marketing photos · prototype</p>
+            <p>Evidence-based reality check · prototype</p>
           </div>
         </div>
         <nav className="tabs" aria-label="Views">
-          {([['map', 'Map'], ['offers', 'Offers'], ['compare', 'Compare'], ['calibrate', 'Calibrate']] as const).map(([id, label]) => (
+          {tabs.map(([id, label]) => (
             <button key={id} type="button" className={`tab${view === id ? ' active' : ''}`} aria-current={view === id ? 'page' : undefined} onClick={() => setView(id)}>
               {label}
             </button>
@@ -134,104 +126,86 @@ export function App() {
       </header>
 
       <div className="proto-banner" role="note">
-        Prototype — all scores are <strong>unverified seed estimates</strong>; hotels and offers are <strong>DEMO / NOT LIVE DATA</strong>.
+        Prototype — scores appear only where the dataset holds evidence; “no evidence yet” means unknown. Dataset {dataset.meta.datasetVersion}.
       </div>
 
       {view === 'map' ? (
         <main className={`stage${hasPanel ? ' has-panel' : ''}`}>
           <section className="map-wrap" aria-label="Map">
-            <OverlayControls active={overlays} onToggle={toggleOverlay} />
+            <LayerControls active={layers} onToggle={toggleLayer} />
             <ZanzibarMap
-              outline={dataset.islandOutline}
-              zones={zones}
-              attractions={markers}
+              bounds={dataset.meta.mapBounds}
+              shapes={shapes}
+              markers={markers}
               pin={pin}
+              circle={circle}
               focus={focus}
-              onSelectZone={selectArea}
-              onSelectAttraction={selectAttraction}
+              onSelectShape={select}
+              onSelectMarker={select}
               onPickPoint={pickPoint}
             />
             <Legend />
-            {!hasPanel ? <div className="map-hint">Tap an area for its reality check</div> : null}
+            {!hasPanel ? <div className="map-hint">Tap the map to drop a pin, or pick a feature</div> : null}
           </section>
           <aside className="side" aria-label="Details">
-            {attraction ? <AttractionCard attraction={attraction} onClose={() => setAttractionId(null)} /> : null}
-            {area && explorerTarget ? (
-              <AreaPanel
-                area={area}
+            {selection ? (
+              <LocalRealityPanel
                 dataset={dataset}
-                feedback={feedback[area.id]}
+                selection={selection}
+                radius={radius}
+                feedback={feedback}
                 testerMode={testerMode}
-                explorerTarget={explorerTarget}
-                onExplore={setExplorer}
-                onSelectAttraction={selectAttraction}
-                onFeedback={(patch) => changeFeedback(area.id, patch)}
+                onRadius={setRadius}
+                onFeedback={changeFeedback}
                 onCompare={() => {
-                  setCompareSeed(area.id);
+                  setCompareSeed(selection.ref.id);
                   setView('compare');
                 }}
-                onClose={() => {
-                  setAreaId(null);
-                  setExplorer(null);
-                }}
+                onClose={() => setSelection(null)}
               />
-            ) : null}
-            {!area && !attraction ? (
-              <section className="card area-list" aria-label="All areas">
-                <h2>Areas</h2>
-                <p className="muted small">Pick an area (or tap it on the map). Scores are unverified seed values.</p>
-                <ul className="plain">
-                  {dataset.areas.map((a) => {
-                    const band = BANDS[scoreBand(a.scores.overall.score)];
-                    const f = feedback[a.id];
-                    return (
-                      <li key={a.id}>
-                        <button type="button" className="list-btn" onClick={() => selectArea(a.id)}>
-                          <span>{a.name}</span>
-                          <span className="muted small">{f ? RATING_LABEL[f.rating] : ''}</span>
-                          <span style={{ color: band.color }}>
-                            <strong>{formatScore(a.scores.overall.score)}</strong> {band.symbol}? 
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ) : null}
+            ) : (
+              <>
+                <DatasetStatus dataset={dataset} problems={problems} />
+                {dataset.areas.length + dataset.beaches.length + dataset.hotels.length > 0 ? (
+                  <section className="card area-list" aria-label="Features">
+                    <h2>Places</h2>
+                    <ul className="plain">
+                      {[
+                        ...dataset.areas.map((a) => ({ kind: a.properties.kind as FeatureKind, id: a.properties.id, name: a.properties.name })),
+                        ...dataset.beaches.map((b) => ({ kind: 'beach' as const, id: b.properties.id, name: b.properties.name })),
+                        ...dataset.hotels.map((h) => ({ kind: 'hotel' as const, id: h.id, name: h.name })),
+                      ].map((f) => (
+                        <li key={`${f.kind}:${f.id}`}>
+                          <button type="button" className="list-btn" onClick={() => select(f.kind, f.id)}>
+                            <span>{f.name}</span>
+                            <span className="muted small">{f.kind}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
+              </>
+            )}
           </aside>
-        </main>
-      ) : null}
-
-      {view === 'offers' ? (
-        <main className="page">
-          <OffersView
-            dataset={dataset}
-            onShowArea={(id) => {
-              selectArea(id);
-              setView('map');
-            }}
-          />
         </main>
       ) : null}
 
       {view === 'compare' ? (
         <main className="page">
-          <CompareView key={compareSeed ?? 'none'} dataset={dataset} feedback={feedback} initialA={compareSeed} />
+          <CompareView key={compareSeed ?? 'none'} dataset={dataset} initialA={compareSeed} />
         </main>
       ) : null}
 
       {view === 'calibrate' ? (
         <main className="page">
-          <CalibrateView
-            dataset={dataset}
-            feedback={feedback}
-            onChange={changeFeedback}
-            onExport={exportFeedback}
-            onClear={clearFeedback}
-            exportJson={exportJson}
-            storageOk={storageOk}
-          />
+          <CalibrateView dataset={dataset} feedback={feedback} onChange={changeFeedback} onExport={exportFeedback} onClear={clearFeedback} storageOk={storageOk} exportJson={exportJson} />
+        </main>
+      ) : null}
+
+      {view === 'offers' ? (
+        <main className="page">
+          <OffersView />
         </main>
       ) : null}
     </div>

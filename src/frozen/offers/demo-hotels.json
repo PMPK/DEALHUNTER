@@ -1,0 +1,86 @@
+[
+  {
+    "id": "demo-nungwi-1",
+    "name": "DEMO Palm Resort (synthetic)",
+    "style": "Beachfront resort",
+    "areaLabel": "Nungwi",
+    "synthetic": true
+  },
+  {
+    "id": "demo-kendwa-1",
+    "name": "DEMO Sunset Bungalows (synthetic)",
+    "style": "Beach bungalows",
+    "areaLabel": "Kendwa",
+    "synthetic": true
+  },
+  {
+    "id": "demo-kiwengwa-1",
+    "name": "DEMO Coral All-Inclusive (synthetic)",
+    "style": "Large all-inclusive",
+    "areaLabel": "Kiwengwa",
+    "synthetic": true
+  },
+  {
+    "id": "demo-paje-1",
+    "name": "DEMO Kite Lodge (synthetic)",
+    "style": "Small lodge",
+    "areaLabel": "Paje",
+    "synthetic": true
+  },
+  {
+    "id": "demo-stone-town-1",
+    "name": "DEMO Old Town Guesthouse (synthetic)",
+    "style": "Town guesthouse",
+    "areaLabel": "Stone Town",
+    "synthetic": true
+  },
+  {
+    "id": "demo-matemwe-1",
+    "name": "DEMO Reef Villas (synthetic)",
+    "style": "Villa resort",
+    "areaLabel": "Matemwe",
+    "synthetic": true
+  },
+  {
+    "id": "demo-michamvi-1",
+    "name": "DEMO Peninsula Lodge (synthetic)",
+    "style": "Small lodge",
+    "areaLabel": "Michamvi",
+    "synthetic": true
+  },
+  {
+    "id": "demo-bwejuu-1",
+    "name": "DEMO Village Beach House (synthetic)",
+    "style": "Guesthouse",
+    "areaLabel": "Bwejuu",
+    "synthetic": true
+  },
+  {
+    "id": "demo-jambiani-1",
+    "name": "DEMO Seaweed Coast Inn (synthetic)",
+    "style": "Guesthouse",
+    "areaLabel": "Jambiani",
+    "synthetic": true
+  },
+  {
+    "id": "demo-kizimkazi-1",
+    "name": "DEMO Southern Bay Camp (synthetic)",
+    "style": "Eco camp",
+    "areaLabel": "Kizimkazi",
+    "synthetic": true
+  },
+  {
+    "id": "demo-kendwa-2",
+    "name": "DEMO Lagoon Club (synthetic)",
+    "style": "Beach club hotel",
+    "areaLabel": "Kendwa",
+    "synthetic": true
+  },
+  {
+    "id": "demo-nungwi-2",
+    "name": "DEMO Tip Beach Hotel (synthetic)",
+    "style": "Mid-range hotel",
+    "areaLabel": "Nungwi",
+    "synthetic": true
+  }
+]

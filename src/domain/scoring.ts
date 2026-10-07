@@ -1,10 +1,4 @@
-import type {
-  FeedbackEntry,
-  Provenance,
-  RealityWarning,
-  VerificationStatus,
-  WarningSeverity,
-} from './types';
+import type { FeedbackEntry, RealityWarning, SourceType, VerificationStatus, WarningSeverity } from './types';
 
 export type Band = 'strong' | 'mixed' | 'weak' | 'poor' | 'unknown';
 
@@ -75,23 +69,19 @@ export function worstSeverity(warnings: readonly Pick<RealityWarning, 'severity'
   return worst;
 }
 
-export interface EffectiveStatus {
-  status: VerificationStatus;
-  /** 'tester' when the local calibration feedback changed the status shown. */
-  source: 'dataset' | 'tester';
-}
+export const SOURCE_LABEL: Record<SourceType, string> = {
+  'external-source': 'External source',
+  'first-hand-user': 'First-hand (you)',
+  derived: 'Derived',
+  unknown: 'Unknown source',
+};
 
-/**
- * A tester marking an area "wrong" downgrades the displayed status to disputed.
- * Positive feedback never upgrades to verified — one visit is not a source.
- */
-export function effectiveStatus(item: Pick<Provenance, 'verificationStatus'>, feedback?: FeedbackEntry): EffectiveStatus {
-  if (feedback?.rating === 'wrong' && item.verificationStatus !== 'disputed') {
-    return { status: 'disputed', source: 'tester' };
-  }
-  return { status: item.verificationStatus, source: 'dataset' };
-}
+/** Tester feedback never edits evidence; it only adds a visible flag next to it. */
+export type TesterFlag = 'wrong' | 'confirmed' | null;
 
-export function formatDealScore(score: number | null): string {
-  return score === null ? 'Deal Score: placeholder (not computed)' : `Deal Score: ${score}`;
+export function testerFlag(entry?: FeedbackEntry): TesterFlag {
+  if (!entry) return null;
+  if (entry.rating === 'wrong') return 'wrong';
+  if (entry.rating === 'accurate' || entry.rating === 'mostly-accurate') return 'confirmed';
+  return null;
 }

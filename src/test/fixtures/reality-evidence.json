@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "assessments": [
+    {
+      "id": "a1",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "dimension": "overall",
+      "score": 60,
+      "confidence": 0.8,
+      "verificationStatus": "verified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE verified source",
+          "url": "https://example.invalid/fixture-1"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a2",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "dimension": "overall",
+      "score": 55,
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a3",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "dimension": "beach",
+      "score": null,
+      "confidence": 0,
+      "verificationStatus": "unverified",
+      "sourceType": "unknown",
+      "reasons": [],
+      "evidence": [],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a4",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "dimension": "overall",
+      "score": 90,
+      "confidence": 0.9,
+      "verificationStatus": "unverified",
+      "sourceType": "first-hand-user",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a5",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "dimension": "surroundings",
+      "score": 70,
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "derived",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a6",
+      "target": {
+        "kind": "area",
+        "id": "fx-cove"
+      },
+      "dimension": "overall",
+      "score": 30,
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "a7",
+      "target": {
+        "kind": "beach",
+        "id": "fx-beach"
+      },
+      "dimension": "beach",
+      "score": 45,
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "w1",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "category": "industrial",
+      "severity": "problem",
+      "title": "FIXTURE warning",
+      "detail": "Fixture detail.",
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    }
+  ],
+  "observations": [
+    {
+      "id": "o1",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "topic": "beach-access",
+      "text": "FIXTURE: access note.",
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    },
+    {
+      "id": "o2",
+      "target": {
+        "kind": "area",
+        "id": "fx-town"
+      },
+      "topic": "roads-built-environment",
+      "text": "FIXTURE: 250 m only.",
+      "radiusM": 250,
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "external-source",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    }
+  ],
+  "radiusAnalyses": [
+    {
+      "id": "r1",
+      "target": {
+        "kind": "hotel",
+        "id": "fx-hotel"
+      },
+      "radiusM": 500,
+      "method": "FIXTURE method",
+      "metrics": [
+        {
+          "key": "road-km",
+          "label": "Road length",
+          "value": 1.2,
+          "unit": "km"
+        }
+      ],
+      "confidence": 0.5,
+      "verificationStatus": "unverified",
+      "sourceType": "derived",
+      "reasons": [
+        "fixture reason"
+      ],
+      "evidence": [
+        {
+          "label": "FIXTURE evidence",
+          "note": "fictional"
+        }
+      ],
+      "lastUpdated": "2026-01-01"
+    }
+  ]
+}

@@ -1,23 +1,17 @@
 # Acceptance checklist
 
-Status: ✅ done and covered by automated tests · 🧪 also/only verified manually in a browser · ⏳ not done
+✅ implemented and covered by automated tests · 🧪 verified manually in a browser · ⏳ architecture only (no data / no analysis yet)
 
 | # | Requirement | Status | Where verified |
 |---|-------------|--------|----------------|
-| 1 | Zanzibar-only interactive map (Leaflet + OSM tiles, attribution shown) | ✅🧪 | browser smoke test; tiles need internet |
-| 2 | Areas are data entities (10 areas; add one = add JSON + zone) | ✅ | `dataset.test.ts` |
-| 3 | 5 overlays, each independently toggleable | ✅ | `App.test.tsx` "switches every overlay independently", `overlays.test.ts` |
-| 4 | Coloured zones with 0–100 score; score has confidence, reasons, evidence, lastUpdated, verificationStatus | ✅ | `validate.ts` + `dataset.test.ts` |
-| 4b | Unverified seed values clearly marked in UI | ✅ | `App.test.tsx`, dashed outline / "?" chip |
-| 5 | Area panel: scores, positives, negatives, warnings, confidence, sources, nearby attractions, airport distance, suitable-for | ✅ | `App.test.tsx` |
-| 6 | Reality Explorer: Google Maps, Street View, Google Earth/satellite — no API key | ✅ | `geo.test.ts`, `App.test.tsx` |
-| 7 | Attraction markers with name, coords, category, rating, description, source, verification | ✅ | `dataset.test.ts`, attraction card test |
-| 8 | Hotels linked to areas, clearly synthetic | ✅ | `dataset.test.ts`, `App.test.tsx` |
-| 9 | DEMO holiday offers (price, people, city, dates, duration, hotel, board, Deal Score placeholder) labelled DEMO / NOT LIVE DATA | ✅ | `App.test.tsx` |
-| 9b | Offers search: filters, sorting, reality filters, DEMO labelling, jump to area | ✅ | `offers.test.ts`, `App.test.tsx` "offers search" |
-| 10 | Tester mode: 4 ratings + note per area, localStorage, "Export feedback JSON" | ✅🧪 | `feedback.test.ts`, `App.test.tsx`, real browser download check |
-| 11 | Compare two areas side-by-side | ✅ | `App.test.tsx` |
-| 12 | Mobile-first responsive UI | 🧪 | screenshots at 390 px and 1280 px |
-| – | Static build; typecheck, tests and `npm run build` pass | ✅ | `npm run validate` |
-| – | Map provider isolated behind `src/map` | ✅ | `src/map/types.ts` contract |
-| – | Any item marked `verified` must cite an evidence URL | ✅ | `validate.ts` rule + test |
+| P1 | Real geography: GeoJSON polygons/MultiPolygons, sub-zone support, no fabricated geometry shipped (areas.geojson is empty) | ✅ (geometry ⏳ data) | `validate.test.ts`, `shipped.test.ts`, `assess.test.ts` (inheritance) |
+| P2 | Six independently toggleable layers | ✅ | `App.test.tsx` "switches each of the six layers", `layers.test.ts` |
+| P2 | score / confidence / verificationStatus / reasons / evidence / sourceType / lastUpdated on every scored feature; unknown never scored | ✅ | `validate.test.ts`, `layers.test.ts` ("n/a"), `App.test.tsx` |
+| P3 | Local reality for point/hotel/area: 9 topics, "No evidence yet" where empty | ✅ | `App.test.tsx` |
+| P3 | 250 m / 500 m / 1 km radius selector, map circle, analysis slot, derived attractions-in-radius | ✅ (automated analysis ⏳) | `App.test.tsx`, `geo.test.ts` |
+| P4 | Reality Explorer: Google Maps, Street View, Earth + satellite links, no key, for any selection incl. dropped pin | ✅ | `App.test.tsx`, `geo.test.ts` |
+| P5 | Per-dimension tester feedback (overall, beach, infrastructure, surroundings, warnings), 4 ratings + note, stored as first-hand-user, export JSON, never overwrites evidence | ✅🧪 | `feedback.test.ts`, `App.test.tsx`, browser download check (v1) |
+| P6 | Separated data files; UI contains no Zanzibar facts or coordinates | ✅ | `shipped.test.ts` guard (no coordinates / place names / claims in code) |
+| – | Offers tab frozen, independent of Reality data | ✅ | `App.test.tsx` "Offers tab (frozen demo)" |
+| – | typecheck, tests, production build | ✅ | `npm run validate` |
+| – | Evidence-backed Zanzibar dataset | ⏳ | **not supplied yet** |

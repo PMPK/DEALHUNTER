@@ -24,7 +24,7 @@ export function RealityExplorer({ target }: { target: ExplorerTarget }) {
         <a className="btn" href={googleEarthUrl(target.position)} {...ext}>🌍 Google Earth</a>
         <a className="btn btn-ghost" href={satelliteUrl(target.position)} {...ext}>🛰 Satellite (Maps)</a>
       </div>
-      <p className="muted small">Opens Google in a new tab — no API key used. Street View coverage in Zanzibar may be patchy.</p>
+      <p className="muted small">Opens Google in a new tab — no API key used. Street View coverage varies by location.</p>
     </div>
   );
 }

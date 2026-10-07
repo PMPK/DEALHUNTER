@@ -184,3 +184,28 @@ textarea, select { color: var(--ink); width: 100%; font: inherit; padding: .5rem
 .reality-chip { font-size: .78rem; border: 1.5px solid var(--line); border-radius: 999px; padding: 1px 8px; background: #fcfbf8; }
 .offer-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
 @media (min-width: 760px) { .offer-results { grid-template-columns: 1fr 1fr; } }
+
+/* Reality foundation additions */
+.kind-tag { margin: 0; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
+.badge-row { display: flex; flex-wrap: wrap; gap: .3rem; margin: .3rem 0; }
+.badge.source-first-hand-user { background: #e1ecfb; border-color: #8fb1e5; color: #153e75; }
+.badge.source-derived { background: #e8eef0; border-color: #aab9bd; color: #2c4047; }
+.badge.source-unknown { background: #f3e5e5; border-color: #d9a5a5; color: #6a2323; border-style: dashed; }
+.score-value.unknown { font-size: 1.1rem; color: var(--muted); font-weight: 700; }
+.score-block { border: 1px solid var(--line); border-radius: 10px; padding: .5rem; background: #fcfbf8; }
+.score-block .score-card { border: 0; padding: 0; background: transparent; }
+.scores { grid-template-columns: 1fr; }
+@media (min-width: 640px) and (max-width: 899px) { .scores { grid-template-columns: 1fr 1fr; } }
+.prov ul { margin: .2rem 0 .2rem 1.1rem; padding: 0; }
+.radius-bar { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.topic { border-top: 1px solid var(--line); padding: .3rem 0; }
+.topic h4 { margin: .2rem 0; }
+.observation { margin: .3rem 0; padding-left: .5rem; border-left: 3px solid var(--line); }
+.metrics { border-collapse: collapse; font-size: .85rem; } .metrics th, .metrics td { text-align: left; padding: .15rem .6rem .15rem 0; }
+.other-assessment { margin: .4rem 0; padding: .3rem; background: #f4f1ea; border-radius: 6px; }
+.feedback { border: 1px solid var(--line); border-radius: 10px; margin: .6rem 0; padding: .5rem; }
+.feedback legend { font-weight: 700; font-size: .85rem; padding: 0 .3rem; }
+.count-row { display: contents; }
+.problems { background: #fde0e0; border: 1px solid #e59a9a; border-radius: 8px; padding: .4rem .6rem; color: #5a1616; }
+.zr-hotel { border-color: #7a3fb0; }
+code { background: #ece7da; padding: 0 .25rem; border-radius: 4px; font-size: .85em; }

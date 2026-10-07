@@ -1,54 +1,42 @@
 # STATE
 
-_Last updated: 2026-10-07 · dataset `0.1.0-seed`_
+_Last updated: 2026-10-07 · shipped dataset `0.0.0-empty`_
 
 ## What currently works
-- Leaflet map of Zanzibar (OSM tiles) with 10 schematic area zones, 9 attraction markers, a dropped-pin tool.
-- 5 independent overlays: Overall, Beach/Swimming, Infrastructure, Reality Warnings, Attractions.
-  With all overlays off, neutral outlines remain so areas stay selectable.
-- Area panel: 3 scores (each with confidence + verification badge), positives/negatives, warnings, airport
-  distance, suitable-for, nearby attractions, hotels + DEMO offers, reasons, sources & evidence.
-- Reality Explorer: Google Maps / Street View / Google Earth / satellite links (no API key) for zone centre,
-  attraction, synthetic hotel or dropped pin.
-- Tester mode: Accurate / Mostly accurate / Wrong / Not sure + note per area, localStorage, export JSON.
-  "Wrong" displays the area as *disputed* locally.
-- **Offers tab**: search over 28 DEMO offers (12 synthetic hotels) with filters for departure city, area, people, max price/person, board, departure window, nights, plus *reality filters* (min area / beach score); 6 sort orders; each result shows the area's seed scores (marked unverified) and warning count and jumps to the area on the map.
-- Compare view (two areas); responsive layout (stacked sheet on phones, side panel ≥900 px).
-- `npm run validate` = typecheck + tests + production build, all passing.
+- **Data architecture ready for an evidence-backed dataset.** Six separate files (`meta.json`, `areas.geojson`, `beaches.geojson`, `attractions.json`,
+  `hotels.json`, `reality-evidence.json`), validated on load; problems are listed in the app's *Dataset* panel. Run against any directory with `ZR_DATASET_DIR`.
+- **Real-geometry model:** Polygon/MultiPolygon areas with `subzone` children (inherit parent evidence only when they have none, and say so), beaches as lines/polygons.
+- **Six layers + hotels marker toggle**, all independent. Unknown renders as "n/a" / grey / dashed; fill is never a made-up band.
+- **Evidence model:** every assessment/warning/observation/radius analysis carries confidence, verificationStatus, sourceType (external-source / first-hand-user / derived / unknown),
+  reasons, evidence, lastUpdated. Validator forbids scores without evidence/reasons/known source and `verified` without a URL. Competing assessments are all kept; first-hand-user never outranks external evidence.
+- **Local reality panel** for areas, sub-zones, beaches, hotels, attractions and dropped pins: 4 score dimensions, warnings (category + severity), 9 local topics,
+  250 m / 500 m / 1 km selector with map circle, radius-analysis slot, derived context (containing polygons, attractions within radius, airport distance if configured).
+- **Reality Explorer** (Google Maps, Street View, Earth, satellite) for any selection or dropped pin — works even with an empty dataset.
+- **Tester mode:** per-feature × per-dimension (overall, beach, infrastructure, surroundings, warnings) rating + note → localStorage v2 as `first-hand-user`; shown beside
+  evidence (never edits it); export JSON v2 includes the dataset's claims at that moment; on-screen copyable JSON for sandboxed embeds.
+- Compare view (two areas, dimension by dimension, "No evidence yet" where empty). Offers tab kept but **frozen** (own demo data, no link to Reality).
+- `npm run validate`: typecheck + 98 tests + production build pass.
 
 ## Known limitations
-- **All scores, warnings and attractions are unverified editorial priors** from general knowledge — no
-  source was checked (egress to e.g. UNESCO was blocked in the build environment, so nothing is `verified`).
-- Island silhouette (`src/data/island.json`) is a hand-drawn rough outline so the map reads when tiles are blocked (e.g. inside the claude.ai Artifact, which blocks external images). Not survey-accurate.
-- Export: also shown as copyable JSON on the Calibrate page because sandboxed embeds block file downloads.
-- Zone polygons are schematic rounded rectangles, not real boundaries; attraction/hotel coordinates are approximate.
-- Distance to airport is straight-line, not road distance or time.
-- OSM public tile server is for light use only; map tiles need internet. Swap in `src/map/leaflet/tiles.ts`.
-- At island-wide zoom, labels of neighbouring areas overlap (Nungwi/Kendwa, Bwejuu/Paje/Jambiani); zoom in.
-  Chips collapse to a short form (O78▲?) below zoom 11.
-- Feedback is per area only (not per score); no import of an exported file; no multi-device sync.
-- Street View has patchy coverage in Zanzibar; the link falls back to the map.
-- The Leaflet component itself is not unit-tested (jsdom has no layout); checked via browser smoke test only.
-  Map tiles never loaded in the build sandbox (no egress), so tile rendering itself was not seen.
+- **The shipped dataset is empty on purpose:** no geometry, scores, warnings, attractions, hotels or airport. The map shows only OSM tiles until data is supplied.
+- Automated surroundings analysis (250/500/1000 m) is **not implemented**; only the data slot, radius UI and a few derived facts (attractions within radius, containing polygons).
+- Dropped pins cannot receive tester feedback (no dataset claim to judge); feedback targets areas, sub-zones and beaches only.
+- Hotels/attractions have no per-dimension scores; assessments can target them in data, but the map colours areas/beaches only.
+- Polygon labels/selection points use the bounding-box centre (can fall outside concave shapes); labels of tiny sub-zones appear only at zoom ≥ 13.
+- Public OSM tiles are for light use only (`src/map/leaflet/tiles.ts`); tiles do not load inside the claude.ai Artifact sandbox.
+- v1 per-area feedback is not migrated.
 
-## Unfinished / not started
-- Verification pass: replace "Editorial prior" evidence with real sources, then promote items to `verified`.
-- Per-score tester corrections (e.g. "beach should be 40"); feedback import/merge tool.
-- Real polygons (OSM-derived), more areas (Dongwe, Uroa, Fumba, Makunduchi), hotels from a real source.
-- Deal Score algorithm; **live offers (needs a travel-data API / affiliate feed — nothing is connected; the Offers tab runs on invented data)**; Pemba.
-- Accessibility audit (map labels are keyboard-focusable via Leaflet; not screen-reader tested).
+## Placeholder / non-evidence values still in the repo
+- `meta.json` `mapBounds` / `sanityBounds`: rough viewport and sanity boxes typed from general knowledge — navigation hints, not data; replace when real bounds are known.
+- `src/frozen/offers/*`: invented demo offers and hotels (frozen, unlinked).
+- `src/test/fixtures/*`: fictional geometry near 0°,0° and invented evidence, test-only.
+- All earlier seed scores/zones/attractions/hotels/island outline were **removed** (they came from memory, not sources).
 
 ## Architectural decisions
-- **Static SPA**: Vite + React + TS, `base: './'`, deployable from any static host. No backend.
-- **Data ≠ UI**: JSON in `src/data`, pure logic in `src/domain` (no React/Leaflet imports), UI in `src/ui`.
-- **Map provider seam**: `src/map/types.ts` is a provider-neutral contract (plain zones/markers/callbacks);
-  `src/map/index.ts` picks the implementation; only `src/map/leaflet/*` imports Leaflet.
-- **Honesty enforced in code**: `validateDataset` rejects verified-without-URL, bad ranges, non-synthetic hotels,
-  non-demo offers; `scoreBand(null)` is "unknown"; positive feedback never upgrades verification.
-- Overlay rendering: fill colour = first enabled score layer (Overall → Beach → Infra); a labelled chip per
-  enabled layer; warnings use outline colour + count chip. Dashed outline = unverified.
-- Dependencies kept minimal: react, react-dom, leaflet (+ vite/vitest/testing-library dev only).
+- Data ≠ code: a test fails if UI/domain/map code contains coordinate literals, place names or Zanzibar claims.
+- Claims are separate records pointing at features (`target: {kind,id}`), so geometry and evidence can be supplied independently and evidence can come from multiple sources.
+- Map provider seam: `src/map/types.ts` (plain shapes/markers/callbacks); only `src/map/leaflet/*` imports Leaflet.
+- Tester truth is a distinct evidence class, stored apart from the dataset and exported with the dataset claims for later ingestion.
 
 ## Next recommended action
-Walk the areas, export the feedback JSON, then rewrite scores/warnings with real evidence (or lower confidence).
-After that add per-score tester corrections so the next calibration round is more precise.
+Supply the researched dataset in the six-file format (see DATA_MODEL.md), run `ZR_DATASET_DIR=… npm run dev`, fix whatever the Dataset panel reports, then walk the places with Tester mode.

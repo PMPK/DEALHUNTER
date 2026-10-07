@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fx-town",
+        "name": "FIXTURE Town",
+        "kind": "area",
+        "parentId": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              0.02,
+              0
+            ],
+            [
+              0.02,
+              0.02
+            ],
+            [
+              0,
+              0.02
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fx-town-north",
+        "name": "FIXTURE Town North",
+        "kind": "subzone",
+        "parentId": "fx-town"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0,
+              0.01
+            ],
+            [
+              0.02,
+              0.01
+            ],
+            [
+              0.02,
+              0.02
+            ],
+            [
+              0,
+              0.02
+            ],
+            [
+              0,
+              0.01
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fx-cove",
+        "name": "FIXTURE Cove",
+        "kind": "area",
+        "parentId": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              0.03,
+              0
+            ],
+            [
+              0.05,
+              0
+            ],
+            [
+              0.05,
+              0.02
+            ],
+            [
+              0.03,
+              0.02
+            ],
+            [
+              0.03,
+              0
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

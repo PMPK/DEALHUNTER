@@ -1,41 +1,37 @@
 import { useMemo, useState } from 'react';
-import { EMPTY_CRITERIA, filterOffers, joinOffers, sortOffers, type OfferCriteria, type OfferSort } from '../domain/offers';
-import { BANDS, SEVERITY, formatDealScore, formatScore, scoreBand, worstSeverity } from '../domain/scoring';
-import type { BoardType, Dataset } from '../domain/types';
-import { DemoBanner } from './common';
+import { DemoBanner } from '../../ui/common';
+import { EMPTY_CRITERIA, filterOffers, joinOffers, sortOffers, type OfferCriteria, type OfferSort } from './offers';
+import demoHotels from './demo-hotels.json';
+import demoOffers from './demo-offers.json';
+import type { BoardType, DemoHotel, DemoOffer } from './types';
+
+const HOTELS = demoHotels as unknown as DemoHotel[];
+const OFFERS = demoOffers as unknown as DemoOffer[];
+const formatDealScore = (s: number | null) => (s === null ? 'Deal Score: placeholder (not computed)' : `Deal Score: ${s}`);
 
 const BOARDS: BoardType[] = ['All inclusive', 'Half board', 'Bed & breakfast', 'Room only'];
 const SORTS: Array<[OfferSort, string]> = [
   ['price-asc', 'Price: low to high'],
   ['price-desc', 'Price: high to low'],
-  ['reality-desc', 'Area reality score'],
-  ['beach-desc', 'Beach / swimming score'],
   ['nights-desc', 'Longest stay'],
   ['date-asc', 'Earliest departure'],
 ];
 const numOrNull = (v: string) => (v === '' ? null : Number(v));
 
-function Chip({ label, score }: { label: string; score: number | null }) {
-  const b = BANDS[scoreBand(score)];
-  return (
-    <span className="reality-chip" style={{ borderColor: b.color }} title={`${label} (seed, unverified): ${formatScore(score)} ${b.label}`}>
-      {label} <strong style={{ color: b.color }}>{formatScore(score)}{b.symbol}?</strong>
-    </span>
-  );
-}
-
-export function OffersView({ dataset, onShowArea }: { dataset: Dataset; onShowArea: (areaId: string) => void }) {
+export function OffersView() {
   const [c, setC] = useState<OfferCriteria>(EMPTY_CRITERIA);
   const [sort, setSort] = useState<OfferSort>('price-asc');
   const set = <K extends keyof OfferCriteria>(k: K, v: OfferCriteria[K]) => setC((p) => ({ ...p, [k]: v }));
 
-  const all = useMemo(() => joinOffers(dataset.offers, dataset.hotels, dataset.areas), [dataset]);
-  const cities = useMemo(() => [...new Set(dataset.offers.map((o) => o.departureCity))].sort(), [dataset]);
+  const all = useMemo(() => joinOffers(OFFERS, HOTELS), []);
+  const cities = useMemo(() => [...new Set(OFFERS.map((o) => o.departureCity))].sort(), []);
+  const areaLabels = useMemo(() => [...new Set(HOTELS.map((h) => h.areaLabel))].sort(), []);
   const results = useMemo(() => sortOffers(filterOffers(all, c), sort), [all, c, sort]);
 
   return (
     <div className="view offers" data-testid="offers-view">
-      <h2>Holiday offers</h2>
+      <h2>Holiday offers <span className="badge">frozen demo</span></h2>
+      <p className="muted small">Out of scope for the Reality experiment. These offers are invented and are not linked to any Reality data.</p>
       <DemoBanner>
         every offer here is invented to show the future search. No live prices or availability. Real offers need a travel-data
         source (API / affiliate feed), which is not connected in this prototype.
@@ -48,10 +44,10 @@ export function OffersView({ dataset, onShowArea }: { dataset: Dataset; onShowAr
             {cities.map((x) => <option key={x}>{x}</option>)}
           </select>
         </label>
-        <label>Area
-          <select id="f-area" value={c.areaId} onChange={(e) => set('areaId', e.target.value)}>
+        <label>Area label (demo text only)
+          <select id="f-area" value={c.areaLabel} onChange={(e) => set('areaLabel', e.target.value)}>
             <option value="">Any</option>
-            {dataset.areas.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            {areaLabels.map((a) => <option key={a}>{a}</option>)}
           </select>
         </label>
         <label>People
@@ -81,20 +77,6 @@ export function OffersView({ dataset, onShowArea }: { dataset: Dataset; onShowAr
         <label>Max nights
           <input id="f-maxn" type="number" min={1} inputMode="numeric" value={c.maxNights ?? ''} onChange={(e) => set('maxNights', numOrNull(e.target.value))} />
         </label>
-        <label>Min area reality score
-          <select id="f-overall" value={c.minOverall ?? ''} onChange={(e) => set('minOverall', numOrNull(e.target.value))}>
-            <option value="">Any</option>
-            <option value="50">50+ (mixed or better)</option>
-            <option value="70">70+ (strong)</option>
-          </select>
-        </label>
-        <label>Min beach / swimming score
-          <select id="f-beach" value={c.minBeach ?? ''} onChange={(e) => set('minBeach', numOrNull(e.target.value))}>
-            <option value="">Any</option>
-            <option value="50">50+ (mixed or better)</option>
-            <option value="70">70+ (strong)</option>
-          </select>
-        </label>
         <div className="filter-actions">
           <button type="button" className="btn btn-ghost" onClick={() => setC(EMPTY_CRITERIA)}>Reset filters</button>
         </div>
@@ -113,8 +95,7 @@ export function OffersView({ dataset, onShowArea }: { dataset: Dataset; onShowAr
         <p className="card">No demo offers match. Loosen a filter — the reality filters hide areas with lower seed scores.</p>
       ) : (
         <ul className="plain offer-results">
-          {results.map(({ offer, hotel, area, pricePerPerson: pp, totalPrice: total }) => {
-            const worst = worstSeverity(area.warnings);
+          {results.map(({ offer, hotel, pricePerPerson: pp, totalPrice: total }) => {
             return (
               <li key={offer.id} className="card offer-card" data-testid="offer-result">
                 <div className="offer-top">
@@ -122,24 +103,15 @@ export function OffersView({ dataset, onShowArea }: { dataset: Dataset; onShowAr
                   <span className="badge demo">SYNTHETIC HOTEL</span>
                 </div>
                 <h3>{hotel.name}</h3>
-                <p className="muted small">{area.name} · {hotel.style}</p>
+                <p className="muted small">{hotel.areaLabel} · {hotel.style}</p>
                 <div className="offer-price">
                   <strong>{pp} EUR</strong> <span className="muted">per person</span> · <span>{total} EUR total for {offer.people}</span>
                 </div>
                 <p className="small">
                   {offer.departDate} → {offer.returnDate} · {offer.nights} nights · {offer.board} · from {offer.departureCity}
                 </p>
-                <div className="reality-row" aria-label={`Reality check for ${area.name}`}>
-                  <Chip label="Area" score={area.scores.overall.score} />
-                  <Chip label="Beach" score={area.scores.beach.score} />
-                  <Chip label="Infra" score={area.scores.infrastructure.score} />
-                  <span className="reality-chip">
-                    {worst ? `${SEVERITY[worst].symbol} ${area.warnings.length} warning${area.warnings.length === 1 ? '' : 's'}` : 'No warnings recorded'}
-                  </span>
-                </div>
                 <div className="offer-foot">
                   <span className="deal-score muted small">{formatDealScore(offer.dealScore)}</span>
-                  <button type="button" className="btn btn-small" onClick={() => onShowArea(area.id)}>See {area.name} reality check →</button>
                 </div>
               </li>
             );

@@ -1,18 +1,35 @@
 import { useRef, useState } from 'react';
-import { RATING_LABEL } from '../domain/feedback';
-import type { Dataset, FeedbackMap, FeedbackRating } from '../domain/types';
+import { resolveAssessments, warningsFor } from '../domain/assess';
+import { DIMENSION_LABEL, FEEDBACK_DIMENSIONS } from '../domain/dimensions';
+import { RATING_LABEL, feedbackKey } from '../domain/feedback';
+import { SOURCE_LABEL, formatScore } from '../domain/scoring';
+import type { Dataset, FeedbackDimension, FeedbackKind, FeedbackMap, FeedbackRating, ScoreDimension } from '../domain/types';
 import { FeedbackControl } from './FeedbackControl';
-import { ScoreMeter } from './common';
 
 interface Props {
   dataset: Dataset;
   feedback: FeedbackMap;
-  onChange: (areaId: string, patch: { rating?: FeedbackRating | null; note?: string }) => void;
+  onChange: (kind: FeedbackKind, id: string, dim: FeedbackDimension, patch: { rating?: FeedbackRating | null; note?: string }) => void;
   onExport: () => void;
   onClear: () => void;
   storageOk: boolean;
   /** Last exported JSON, shown so it can be copied when downloads are blocked (e.g. sandboxed embeds). */
   exportJson?: string | null;
+}
+
+interface Target {
+  kind: FeedbackKind;
+  id: string;
+  name: string;
+}
+
+function claimSummary(dataset: Dataset, t: Target, dim: FeedbackDimension): string {
+  if (dim === 'warnings') {
+    const n = warningsFor(dataset, { kind: t.kind, id: t.id }).length;
+    return n === 0 ? 'Dataset: no warnings recorded' : `Dataset: ${n} warning${n === 1 ? '' : 's'}`;
+  }
+  const a = resolveAssessments(dataset, { kind: t.kind, id: t.id }, dim as ScoreDimension).list[0];
+  return a ? `Dataset: ${formatScore(a.score)} · ${a.verificationStatus} · ${SOURCE_LABEL[a.sourceType]}` : 'Dataset: no evidence yet';
 }
 
 export function CalibrateView({ dataset, feedback, onChange, onExport, onClear, storageOk, exportJson }: Props) {
@@ -27,20 +44,25 @@ export function CalibrateView({ dataset, feedback, onChange, onExport, onClear, 
       setCopied('fail');
     }
   };
-  const done = dataset.areas.filter((a) => feedback[a.id]).length;
+
+  const targets: Target[] = [
+    ...dataset.areas.map((a) => ({ kind: a.properties.kind, id: a.properties.id, name: a.properties.name })),
+    ...dataset.beaches.map((b) => ({ kind: 'beach' as const, id: b.properties.id, name: b.properties.name })),
+  ];
+  const rated = Object.keys(feedback).length;
   return (
     <div className="view calibrate" data-testid="calibrate-view">
       <h2>Reality Calibration</h2>
       <p>
-        You have been to Zanzibar — tell the system where it is right or wrong. Feedback is kept in this browser's
-        localStorage only. Export it as JSON to feed corrections back into the dataset.
+        Judge each dimension of each place separately. Your input is stored in this browser as <strong>first-hand-user</strong> evidence,
+        next to the dataset’s claims and never over them. Export it as JSON to feed corrections into the next dataset.
       </p>
       {!storageOk ? <p className="unverified-note" role="alert">localStorage is unavailable — feedback will be lost on reload. Export before closing.</p> : null}
       <div className="calib-bar">
-        <strong>{done}/{dataset.areas.length} areas rated</strong>
+        <strong>{rated} dimension rating{rated === 1 ? '' : 's'} saved</strong>
         <div className="btn-row">
           <button type="button" className="btn btn-primary" onClick={onExport}>⬇ Export feedback JSON</button>
-          <button type="button" className="btn btn-ghost" onClick={onClear} disabled={done === 0}>Clear all</button>
+          <button type="button" className="btn btn-ghost" onClick={onClear} disabled={rated === 0}>Clear all</button>
         </div>
       </div>
       {exportJson ? (
@@ -55,20 +77,27 @@ export function CalibrateView({ dataset, feedback, onChange, onExport, onClear, 
           </div>
         </section>
       ) : null}
-      {dataset.areas.map((a) => {
-        const f = feedback[a.id];
+      {targets.length === 0 ? (
+        <p className="card" data-testid="calibrate-empty">
+          There are no areas or beaches in the dataset yet, so there is nothing to calibrate. Load a dataset with <code>areas.geojson</code> /
+          <code> beaches.geojson</code> (see DATA_MODEL.md).
+        </p>
+      ) : null}
+      {targets.map((t) => {
+        const count = FEEDBACK_DIMENSIONS.filter((d) => feedback[feedbackKey(t.kind, t.id, d)]).length;
         return (
-          <article key={a.id} className="card calib-card" aria-label={`Calibrate ${a.name}`}>
-            <h3>
-              {a.name} {f ? <span className={`badge rating-tag rating-${f.rating}`}>{RATING_LABEL[f.rating]}</span> : <span className="badge">Not rated</span>}
-            </h3>
-            <div className="scores compact">
-              <ScoreMeter item={a.scores.overall} label="Overall (seed)" feedback={f} />
-              <ScoreMeter item={a.scores.beach} label="Beach (seed)" feedback={f} />
-              <ScoreMeter item={a.scores.infrastructure} label="Infra (seed)" feedback={f} />
-            </div>
-            <FeedbackControl areaName={a.name} entry={f} onChange={(patch) => onChange(a.id, patch)} />
-          </article>
+          <details key={`${t.kind}:${t.id}`} className="card calib-card" aria-label={`Calibrate ${t.name}`}>
+            <summary><strong>{t.name}</strong> <span className="badge">{t.kind}</span> <span className="muted small">{count}/{FEEDBACK_DIMENSIONS.length} rated</span></summary>
+            {FEEDBACK_DIMENSIONS.map((dim) => {
+              const e = feedback[feedbackKey(t.kind, t.id, dim)];
+              return (
+                <div key={dim}>
+                  <p className="small muted">{claimSummary(dataset, t, dim)}{e ? ` · you: ${RATING_LABEL[e.rating]}` : ''}</p>
+                  <FeedbackControl idPrefix={`cal-${t.kind}-${t.id}-${dim}`} label={`${t.name}: ${DIMENSION_LABEL[dim]}`} entry={e} onChange={(patch) => onChange(t.kind, t.id, dim, patch)} />
+                </div>
+              );
+            })}
+          </details>
         );
       })}
     </div>

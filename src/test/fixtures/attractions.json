@@ -1,0 +1,21 @@
+[
+  {
+    "id": "fx-attr",
+    "name": "FIXTURE Attraction",
+    "coordinates": [
+      0.006,
+      0.006
+    ],
+    "coordinatesApproximate": false,
+    "source": {
+      "label": "FIXTURE source",
+      "note": "Fictional"
+    },
+    "verificationStatus": "unverified",
+    "sourceType": "unknown",
+    "lastUpdated": "2026-01-01",
+    "category": "other",
+    "rating": null,
+    "description": "Fixture attraction."
+  }
+]

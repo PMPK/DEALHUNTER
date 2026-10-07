@@ -1,27 +1,22 @@
 # Zanzibar Reality — Product
 
-**Question it answers:** "Is this hotel / area in Zanzibar actually a good place to stay, beyond the marketing photos?"
+**Core question:** *Can this map give a traveler a geographically accurate, evidence-based reality check of where they are actually going in Zanzibar?*
 
-## Hypothesis being tested
-A map of *reality overlays* (beach quality, infrastructure, warnings, attractions) with honest
-confidence and provenance is more useful to a traveler than photos and star ratings. This MVP exists to
-validate that before spending on live offers, AI, paid APIs, accounts or affiliate plumbing.
+Not in scope for this experiment: selling or searching holiday offers (the Offers tab is a frozen demo), accounts, AI, paid APIs.
 
 ## Principles
-1. **Unknown beats fake.** Every score carries confidence, reasons, evidence, `lastUpdated` and a
-   verification status. Seed values are *unverified* and look it (dashed outlines, "?" marks, badges).
-2. **Not colour alone.** Green/yellow/orange/red bands always come with a symbol and a word.
-3. **Zero cost, static.** No backend, no keys, no LLM. External Google links instead of embedded APIs.
-4. **The tester is the first data source.** Calibration mode captures corrections as exportable JSON.
+1. **Unknown beats fake.** A place without evidence shows *No evidence yet*; it never gets a score to look complete.
+2. **Every claim has provenance:** score, confidence, verificationStatus, reasons, evidence, sourceType, lastUpdated.
+3. **The tester is a source, not an editor.** First-hand corrections are stored separately as `first-hand-user` and never overwrite other evidence.
+4. **Data is not code.** All geography and claims live in six data files; the UI holds none.
+5. **Colour is never the only signal** (symbols, words, dashed = unverified/unknown).
 
-## Scope (MVP)
-Zanzibar (Unguja) only · 10 tourist areas · 5 independent overlays · area detail panel · Reality Explorer
-(Google Maps / Street View / Earth links) · attraction markers · synthetic demo hotels & DEMO offers ·
-offer search over demo data (with reality filters) · tester calibration + JSON export · two-area comparison · mobile-first UI.
+## What the product does
+Layers (independently toggleable): Overall stay attractiveness · Beach / swimming reality · Tourist infrastructure · Surroundings / visual environment ·
+Environmental / industrial warnings · Attractions (+ hotel markers). Select an area, sub-zone, beach, hotel, attraction or a dropped pin to get a
+*Local reality* view (beach conditions, beach access, infrastructure nearby, roads/built environment, ports/industrial, surroundings, environmental issues,
+key attractions, distance/context) at 250 m / 500 m / 1 km, plus Reality Explorer links (Google Maps, Street View, Earth/satellite) to inspect the place yourself.
+Compare two areas; calibrate each dimension from first-hand knowledge and export JSON.
 
-## Out of scope (deliberately)
-Live prices, booking, accounts, database, AI summaries, review scraping, Pemba/mainland, real hotel facts.
-
-## Success criteria for this prototype
-After walking the seed areas, the tester can say which scores/warnings were right, wrong or missing, and
-the exported JSON is good enough to rewrite the dataset from.
+## Success criteria
+A researched dataset dropped into the six files renders correctly, validates, and a tester's per-dimension corrections can be exported and fed back as evidence.

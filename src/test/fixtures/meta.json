@@ -1,0 +1,24 @@
+{
+  "datasetVersion": "fixture-0",
+  "description": "TEST FIXTURE ONLY. Fictional geometry near 0,0 (not Zanzibar). Exists to exercise the data model and UI.",
+  "airport": {
+    "name": "FIXTURE Airport",
+    "iata": "FIX",
+    "coordinates": [
+      0.1,
+      0.1
+    ]
+  },
+  "mapBounds": [
+    -0.01,
+    -0.01,
+    0.03,
+    0.06
+  ],
+  "sanityBounds": [
+    -1,
+    -1,
+    1,
+    1
+  ]
+}

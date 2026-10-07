@@ -1,0 +1,36 @@
+[
+  {
+    "id": "fx-hotel",
+    "name": "FIXTURE Hotel",
+    "coordinates": [
+      0.005,
+      0.005
+    ],
+    "coordinatesApproximate": false,
+    "source": {
+      "label": "FIXTURE source",
+      "note": "Fictional"
+    },
+    "verificationStatus": "unverified",
+    "sourceType": "unknown",
+    "lastUpdated": "2026-01-01",
+    "synthetic": true
+  },
+  {
+    "id": "fx-hotel-north",
+    "name": "FIXTURE Hotel North",
+    "coordinates": [
+      0.015,
+      0.01
+    ],
+    "coordinatesApproximate": false,
+    "source": {
+      "label": "FIXTURE source",
+      "note": "Fictional"
+    },
+    "verificationStatus": "unverified",
+    "sourceType": "unknown",
+    "lastUpdated": "2026-01-01",
+    "synthetic": true
+  }
+]

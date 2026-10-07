@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fx-beach",
+        "name": "FIXTURE Beach",
+        "areaId": "fx-town"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.021,
+            0.005
+          ],
+          [
+            0.021,
+            0.015
+          ]
+        ]
+      }
+    }
+  ]
+}

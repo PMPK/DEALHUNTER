@@ -1,11 +1,7 @@
 {
-  "datasetVersion": "0.1.0-seed",
-  "airport": {
-    "name": "Abeid Amani Karume International Airport",
-    "iata": "ZNZ",
-    "coordinates": [
-      -6.222,
-      39.2249
-    ]
-  }
+  "datasetVersion": "0.0.0-empty",
+  "description": "Empty Reality dataset: no geometry and no evidence has been supplied yet. mapBounds is only the initial viewport; sanityBounds only catches mis-ordered or wrong-region coordinates. Neither is data.",
+  "airport": null,
+  "mapBounds": [-6.5, 39.1, -5.7, 39.65],
+  "sanityBounds": [-6.9, 38.8, -5.3, 40.0]
 }
